@@ -26,7 +26,7 @@ class ProjectManagement:
         self.headers = self.agave_client.headers.copy()
         self.account_token = account_token
         self.project_id = project_id
-        
+
         if account_token:
             self._set_account_token(account_token)
         if project_id:
@@ -112,10 +112,10 @@ class ProjectManagement:
         """
         try:
             self._ensure_account_token(account_token)
-            
+
             self._ensure_project_id(project_id, required=False)
 
-            url = f"{self.agave_client.base_url}/projects/{project_id}"
+            url = f"{self.agave_client.base_url}/projects/{self.project_id}"
             self._add_include_source_fields(include_source_fields)
             response = self.agave_client.get(url, headers=self.headers)
             return response.json()
@@ -187,7 +187,7 @@ class ProjectManagement:
             ValueError: If neither account_token nor project_id is set.
         """
         self._ensure_account_token(account_token)
-        
+
         self._ensure_project_id(project_id)
 
         url = f"{self.agave_client.base_url}/rfis"
@@ -225,7 +225,7 @@ class ProjectManagement:
             ValueError: If neither account_token nor project_id is set.
         """
         self._ensure_account_token(account_token)
-        
+
         self._ensure_project_id(project_id)
 
         url = f"{self.agave_client.base_url}/rfis/{rfi_id}"
@@ -258,7 +258,7 @@ class ProjectManagement:
             ValueError: If neither account_token nor project_id is set.
         """
         self._ensure_account_token(account_token)
-        
+
         self._ensure_project_id(project_id)
 
         url = f"{self.agave_client.base_url}/submittals"
@@ -299,7 +299,7 @@ class ProjectManagement:
             ValueError: If neither account_token nor project_id is set.
         """
         self._ensure_account_token(account_token)
-        
+
         self._ensure_project_id(project_id)
 
         url = f"{self.agave_client.base_url}/submittals/{submittal_id}"
