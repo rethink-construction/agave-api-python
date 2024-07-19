@@ -197,7 +197,7 @@ class ProjectManagement:
             params["page"] = page
         if per_page is not None:
             params["per_page"] = per_page
-            
+
         if params:
             query_string = "&".join(f"{k}={v}" for k, v in params.items())
             url += f"?{query_string}"
@@ -389,8 +389,8 @@ class ProjectManagement:
     def contacts(
         self,
         include_source_fields: Optional[List[str]] = None,
-        page: Optional[int] = 1,
-        per_page: Optional[int] = 100,
+        page: Optional[int] = None,
+        per_page: Optional[int] = None,
         account_token: Optional[str] = None,
         project_id: Optional[str] = None,
     ) -> Dict[str, Any]:
@@ -453,8 +453,8 @@ class ProjectManagement:
     def vendors(
         self,
         include_source_fields: Optional[List[str]] = None,
-        page: Optional[int] = 1,
-        per_page: Optional[int] = 100,
+        page: Optional[int] = None,
+        per_page: Optional[int] = None,
         account_token: Optional[str] = None,
         project_id: Optional[str] = None,
     ):
@@ -517,8 +517,8 @@ class ProjectManagement:
     def drawings(
         self,
         include_source_fields: Optional[List[str]] = None,
-        page: Optional[int] = 1,
-        per_page: Optional[int] = 100,
+        page: Optional[int] = None,
+        per_page: Optional[int] = None,
         account_token: Optional[str] = None,
         project_id: Optional[str] = None,
     ):
