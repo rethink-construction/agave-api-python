@@ -1,4 +1,6 @@
 import httpx
+from typing import Optional
+
 
 from .link import Link
 from .file_management import FileManagement
@@ -10,7 +12,14 @@ class AgaveClient:
     Base class for Agave API
     """
 
-    def __init__(self, client_id: str, client_secret: str, timeout: float = 30.0):
+    def __init__(
+        self,
+        client_id: str,
+        client_secret: str,
+        account_token: Optional[str] = None,
+        project_id: Optional[str] = None,
+        timeout: Optional[float] = 30.0,
+    ):
         """
         Initializes a new instance of the AgaveClient class.
 
@@ -25,8 +34,8 @@ class AgaveClient:
             "Client-Id": client_id,
             "Client-Secret": client_secret,
         }
-        self.account_token = None
-        self.project_id = None
+        self.account_token = account_token
+        self.project_id = project_id
         self.timeout = timeout
         self.http_client = httpx.Client(timeout=self.timeout)
 
@@ -83,14 +92,6 @@ class AgaveClient:
             raise httpx.TimeoutException(
                 f"Request timed out after {self.timeout} seconds"
             ) from e
-
-    # Add other HTTP methods (put, delete, etc.) as needed
-
-    def set_account_token(self, account_token: str):
-        self.account_token = account_token
-
-    def set_project_id(self, project_id: str):
-        self.project_id = project_id
 
     def __del__(self):
         """
