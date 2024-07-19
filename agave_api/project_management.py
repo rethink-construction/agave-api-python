@@ -197,6 +197,10 @@ class ProjectManagement:
             params["page"] = page
         if per_page is not None:
             params["per_page"] = per_page
+            
+        if params:
+            query_string = "&".join(f"{k}={v}" for k, v in params.items())
+            url += f"?{query_string}"
 
         self._add_include_source_fields(include_source_fields)
         response = self.agave_client.get(url, headers=self.headers)
