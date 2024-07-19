@@ -13,6 +13,8 @@ class ProjectManagement:
     def __init__(
         self,
         agave_client,
+        account_token: Optional[str] = None,
+        project_id: Optional[str] = None,
     ):
         """
         Initializes a new instance of the ProjectManagement class.
@@ -24,6 +26,11 @@ class ProjectManagement:
         self.headers = self.agave_client.headers.copy()
         self.account_token = None
         self.project_id = None
+        
+        if account_token:
+            self._set_account_token(account_token)
+        if project_id:
+            self._set_project_id(project_id)
 
     def _ensure_account_token(self, account_token: Optional[str] = None):
         """
