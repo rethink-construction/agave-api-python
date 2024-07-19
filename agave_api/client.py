@@ -10,13 +10,14 @@ class AgaveClient:
     Base class for Agave API
     """
 
-    def __init__(self, client_id: str, client_secret: str):
+    def __init__(self, client_id: str, client_secret: str, timeout: float = 30.0):
         """
         Initializes a new instance of the AgaveClient class.
 
         Args:
             client_id (str): The client ID.
             client_secret (str): The client secret.
+            timeout (float): The timeout for HTTP requests in seconds. Defaults to 30 seconds.
         """
         self.base_url = "https://api.agaveapi.com"
         self.headers = {
@@ -26,7 +27,8 @@ class AgaveClient:
         }
         self.account_token = None
         self.project_id = None
-        self.http_client = httpx.Client()
+        self.timeout = timeout
+        self.http_client = httpx.Client(timeout=self.timeout)
 
     @property
     def project_management(self):
@@ -50,8 +52,16 @@ class AgaveClient:
 
         Returns:
             httpx.Response: The response from the server.
+
+        Raises:
+            httpx.TimeoutException: If the request times out.
         """
-        return self.http_client.get(url, **kwargs)
+        try:
+            return self.http_client.get(url, **kwargs)
+        except httpx.TimeoutException as e:
+            raise httpx.TimeoutException(
+                f"Request timed out after {self.timeout} seconds"
+            ) from e
 
     def post(self, url: str, **kwargs):
         """
@@ -63,8 +73,16 @@ class AgaveClient:
 
         Returns:
             httpx.Response: The response from the server.
+
+        Raises:
+            httpx.TimeoutException: If the request times out.
         """
-        return self.http_client.post(url, **kwargs)
+        try:
+            return self.http_client.post(url, **kwargs)
+        except httpx.TimeoutException as e:
+            raise httpx.TimeoutException(
+                f"Request timed out after {self.timeout} seconds"
+            ) from e
 
     # Add other HTTP methods (put, delete, etc.) as needed
 
