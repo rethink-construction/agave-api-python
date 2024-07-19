@@ -24,8 +24,8 @@ class ProjectManagement:
         """
         self.agave_client = agave_client
         self.headers = self.agave_client.headers.copy()
-        self.account_token = None
-        self.project_id = None
+        self.account_token = account_token
+        self.project_id = project_id
         
         if account_token:
             self._set_account_token(account_token)

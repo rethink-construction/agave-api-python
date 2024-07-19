@@ -30,7 +30,7 @@ class AgaveClient:
 
     @property
     def project_management(self):
-        return ProjectManagement(self)
+        return ProjectManagement(self, self.account_token, self.project_id)
 
     @property
     def file_management(self):
@@ -67,6 +67,12 @@ class AgaveClient:
         return self.http_client.post(url, **kwargs)
 
     # Add other HTTP methods (put, delete, etc.) as needed
+
+    def set_account_token(self, account_token: str):
+        self.account_token = account_token
+
+    def set_project_id(self, project_id: str):
+        self.project_id = project_id
 
     def __del__(self):
         """
