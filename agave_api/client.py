@@ -2,12 +2,7 @@ import httpx
 from typing import Optional
 
 
-from .link import Link
-from .file_management import FileManagement
-from .project_management import ProjectManagement
-
-
-class AgaveClient:
+class BaseAgaveClient:
     """
     Base class for Agave API
     """
@@ -39,18 +34,6 @@ class AgaveClient:
         self.timeout = timeout
         self.http_client = httpx.Client(timeout=self.timeout)
 
-    @property
-    def project_management(self):
-        return ProjectManagement(self, self.account_token, self.project_id)
-
-    @property
-    def file_management(self):
-        return FileManagement(self)
-
-    @property
-    def link(self):
-        return Link(self)
-
     def get(self, url: str, **kwargs):
         """
         Sends a GET request using httpx.
@@ -66,11 +49,13 @@ class AgaveClient:
             httpx.TimeoutException: If the request times out.
         """
         try:
-            return self.http_client.get(url, **kwargs)
+            return self.http_client.get(url, **kwargs).json()
         except httpx.TimeoutException as e:
             raise httpx.TimeoutException(
                 f"Request timed out after {self.timeout} seconds"
             ) from e
+        except httpx.HTTPError as e:
+            raise httpx.HTTPError(f"HTTP error occurred: {e}") from e
 
     def post(self, url: str, **kwargs):
         """
@@ -87,11 +72,13 @@ class AgaveClient:
             httpx.TimeoutException: If the request times out.
         """
         try:
-            return self.http_client.post(url, **kwargs)
+            return self.http_client.post(url, **kwargs).json()
         except httpx.TimeoutException as e:
             raise httpx.TimeoutException(
                 f"Request timed out after {self.timeout} seconds"
             ) from e
+        except httpx.HTTPError as e:
+            raise httpx.HTTPError(f"HTTP error occurred: {e}") from e
 
     def __del__(self):
         """

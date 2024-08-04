@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from .client import BaseAgaveClient
+
 
 class FileManagement:
     """
@@ -11,7 +13,7 @@ class FileManagement:
 
     def __init__(
         self,
-        agave_client,
+        agave_client: BaseAgaveClient,
     ):
         """
         Initializes a new instance of the FileManagement class.
