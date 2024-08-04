@@ -1,9 +1,12 @@
+from .client import BaseAgaveClient
+
+
 class Link:
     """
     Handles authentication-related functionalities for the Agave API.
     """
 
-    def __init__(self, agave_client):
+    def __init__(self, agave_client: BaseAgaveClient):
         self.agave_client = agave_client
 
     def create(self, reference_id: str):
