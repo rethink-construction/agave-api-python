@@ -1,12 +1,14 @@
-import sys
 import os
 from typing import Callable
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from pathlib import Path
 
 from agave_api import AgaveClient
 
-SAVE_DIR = "tests/data"
+# Add the parent directory to the Python path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+SAVE_DIR = Path(__file__).parent / "data"
 
 
 def save_json(data, filename):
@@ -21,7 +23,7 @@ def test(
     test_name: str,
     test_func: Callable,
     check_func: Callable,
-    additional_args: tuple = ()
+    additional_args: tuple = (),
 ):
     try:
         try:
@@ -51,7 +53,7 @@ def test_project(agave_client: AgaveClient, project_id: str):
         agave_client,
         f"project_{project_id}",
         lambda client: client.project_management.project(),
-        lambda project: isinstance(project, dict) and "id" in project,   
+        lambda project: isinstance(project, dict) and "id" in project,
     )
 
 
@@ -70,7 +72,7 @@ def test_rfi(agave_client: AgaveClient, rfi_id: str):
         f"rfi_{rfi_id}",
         lambda client, rid: client.project_management.rfi(rid),
         lambda rfi: isinstance(rfi, dict) and "id" in rfi,
-        (rfi_id,)
+        (rfi_id,),
     )
 
 
@@ -89,7 +91,7 @@ def test_submittal(agave_client: AgaveClient, submittal_id: str):
         f"submittal_{submittal_id}",
         lambda client, sid: client.project_management.submittal(sid),
         lambda submittal: isinstance(submittal, dict) and "id" in submittal,
-        (submittal_id,)
+        (submittal_id,),
     )
 
 
@@ -98,7 +100,8 @@ def test_specifications(agave_client: AgaveClient):
         agave_client,
         "specifications",
         lambda client: client.project_management.specifications(),
-        lambda specifications: isinstance(specifications, dict) and "data" in specifications,
+        lambda specifications: isinstance(specifications, dict)
+        and "data" in specifications,
     )
 
 
@@ -108,7 +111,7 @@ def test_specification(agave_client: AgaveClient, specification_id: str):
         f"specification_{specification_id}",
         lambda client, sid: client.project_management.specification(sid),
         lambda specification: isinstance(specification, dict) and "id" in specification,
-        (specification_id,)
+        (specification_id,),
     )
 
 
@@ -127,7 +130,7 @@ def test_contact(agave_client: AgaveClient, contact_id: str):
         f"contact_{contact_id}",
         lambda client, cid: client.project_management.contact(cid),
         lambda contact: isinstance(contact, dict) and "id" in contact,
-        (contact_id,)
+        (contact_id,),
     )
 
 
@@ -146,7 +149,7 @@ def test_vendor(agave_client: AgaveClient, vendor_id: str):
         f"vendor_{vendor_id}",
         lambda client, vid: client.project_management.vendor(vid),
         lambda vendor: isinstance(vendor, dict) and "id" in vendor,
-        (vendor_id,)
+        (vendor_id,),
     )
 
 
@@ -165,7 +168,7 @@ def test_drawing(agave_client: AgaveClient, drawing_id: str):
         f"drawing_{drawing_id}",
         lambda client, did: client.project_management.drawing(did),
         lambda drawing: isinstance(drawing, dict) and "id" in drawing,
-        (drawing_id,)
+        (drawing_id,),
     )
 
 
@@ -174,8 +177,9 @@ def test_drawing_versions(agave_client: AgaveClient, drawing_id: str):
         agave_client,
         f"drawing_versions_{drawing_id}",
         lambda client, did: client.project_management.drawing_versions(did),
-        lambda drawing_versions: isinstance(drawing_versions, dict) and "data" in drawing_versions,
-        (drawing_id,)
+        lambda drawing_versions: isinstance(drawing_versions, dict)
+        and "data" in drawing_versions,
+        (drawing_id,),
     )
 
 
@@ -232,7 +236,7 @@ if __name__ == "__main__":
     import os
     import json
     from dotenv import load_dotenv
-    
+
     load_dotenv()
 
     client_id = os.getenv("CLIENT_ID")

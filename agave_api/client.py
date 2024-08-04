@@ -1,6 +1,7 @@
 import httpx
 from typing import Optional
 
+
 class BaseAgaveClient:
     """
     Base class for Agave API

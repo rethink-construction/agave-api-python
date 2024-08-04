@@ -31,7 +31,6 @@ class AgaveClient(BaseAgaveClient):
         """
         super().__init__(client_id, client_secret, account_token, project_id, timeout)
 
-
     @property
     def project_management(self):
         return ProjectManagement(self, self.account_token, self.project_id)
@@ -43,5 +42,6 @@ class AgaveClient(BaseAgaveClient):
     @property
     def link(self):
         return Link(self)
+
 
 __all__ = ["AgaveClient", "Link", "FileManagement", "ProjectManagement"]

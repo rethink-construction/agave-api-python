@@ -9,6 +9,7 @@ def ensure_account_token(func: Callable):
     def wrapper(self, *args, account_token: Optional[str] = None, **kwargs):
         self._ensure_account_token(account_token)
         return func(self, *args, **kwargs)
+
     return wrapper
 
 
@@ -18,7 +19,9 @@ def ensure_project_id(required: bool = True):
         def wrapper(self, *args, project_id: Optional[str] = None, **kwargs):
             self._ensure_project_id(project_id, required)
             return func(self, *args, project_id=project_id, **kwargs)
+
         return wrapper
+
     return decorator
 
 
@@ -68,100 +71,112 @@ class ProjectManagement:
             url += f"/{resource_id}"
         return url
 
-    def _add_pagination(self, params: Dict[str, Any], page: Optional[int], per_page: Optional[int]):
+    def _add_pagination(
+        self, params: Dict[str, Any], page: Optional[int], per_page: Optional[int]
+    ):
         if page is not None:
             params["page"] = page
         if per_page is not None:
             params["per_page"] = per_page
 
-    def _add_include_source_fields(self, params: Dict[str, Any], include_source_fields: Optional[List[str]]):
+    def _add_include_source_fields(
+        self, params: Dict[str, Any], include_source_fields: Optional[List[str]]
+    ):
         if include_source_fields:
             params["Include-Source-Data"] = ",".join(include_source_fields)
 
-    def _api_call(self, method: str, endpoint: str, resource_id: Optional[str] = None, **kwargs) -> Dict[str, Any]:
+    def _api_call(
+        self, method: str, endpoint: str, resource_id: Optional[str] = None, **kwargs
+    ) -> Dict[str, Any]:
         url = self._build_url(endpoint, resource_id)
         params = {}
-        self._add_pagination(params, kwargs.get('page'), kwargs.get('per_page'))
-        self._add_include_source_fields(params, kwargs.get('include_source_fields'))
-        
+        self._add_pagination(params, kwargs.get("page"), kwargs.get("per_page"))
+        self._add_include_source_fields(params, kwargs.get("include_source_fields"))
+
         headers = self.headers.copy()
-        if kwargs.get('account_token'):
-            headers["Account-Token"] = kwargs['account_token']
-        if kwargs.get('project_id'):
-            headers["Project-Id"] = kwargs['project_id']
+        if kwargs.get("account_token"):
+            headers["Account-Token"] = kwargs["account_token"]
+        if kwargs.get("project_id"):
+            headers["Project-Id"] = kwargs["project_id"]
 
         return getattr(self.agave_client, method)(url, params=params, headers=headers)
 
     @ensure_account_token
     @ensure_project_id(required=False)
-    def project(self, project_id: Optional[str] = None, **kwargs) -> Optional[Dict[str, Any]]:
-        return self._api_call('get', 'projects', project_id or self.project_id, **kwargs)
+    def project(
+        self, project_id: Optional[str] = None, **kwargs
+    ) -> Optional[Dict[str, Any]]:
+        return self._api_call(
+            "get", "projects", project_id or self.project_id, **kwargs
+        )
 
     @ensure_account_token
     def projects(self, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'projects', **kwargs)
+        return self._api_call("get", "projects", **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def rfis(self, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'rfis', **kwargs)
+        return self._api_call("get", "rfis", **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def rfi(self, rfi_id: str, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'rfis', rfi_id, **kwargs)
+        return self._api_call("get", "rfis", rfi_id, **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def submittals(self, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'submittals', **kwargs)
+        return self._api_call("get", "submittals", **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def submittal(self, submittal_id: str, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'submittals', submittal_id, **kwargs)
+        return self._api_call("get", "submittals", submittal_id, **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def specifications(self, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'specification-sections', **kwargs)
+        return self._api_call("get", "specification-sections", **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def specification(self, specification_id: str, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'specification-sections', specification_id, **kwargs)
+        return self._api_call(
+            "get", "specification-sections", specification_id, **kwargs
+        )
 
     @ensure_account_token
     @ensure_project_id(required=False)
     def contacts(self, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'contacts', **kwargs)
+        return self._api_call("get", "contacts", **kwargs)
 
     @ensure_account_token
     @ensure_project_id(required=False)
     def contact(self, contact_id: str, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'contacts', contact_id, **kwargs)
+        return self._api_call("get", "contacts", contact_id, **kwargs)
 
     @ensure_account_token
     @ensure_project_id(required=False)
     def vendors(self, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'vendors', **kwargs)
+        return self._api_call("get", "vendors", **kwargs)
 
     @ensure_account_token
     @ensure_project_id(required=False)
     def vendor(self, vendor_id: str, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'vendors', vendor_id, **kwargs)
+        return self._api_call("get", "vendors", vendor_id, **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def drawings(self, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'drawings', **kwargs)
+        return self._api_call("get", "drawings", **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def drawing(self, drawing_id: str, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', 'drawings', drawing_id, **kwargs)
+        return self._api_call("get", "drawings", drawing_id, **kwargs)
 
     @ensure_account_token
     @ensure_project_id()
     def drawing_versions(self, drawing_id: str, **kwargs) -> Dict[str, Any]:
-        return self._api_call('get', f'drawings/{drawing_id}/versions', **kwargs)
+        return self._api_call("get", f"drawings/{drawing_id}/versions", **kwargs)
