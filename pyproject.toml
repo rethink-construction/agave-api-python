@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "agave_api"
-version = "0.1.7"
+version = "0.1.8"
 description = "A Python client for the Agave API"
 authors = ["Joe Petrantoni <79169021+jpetrantoni@users.noreply.github.com>"]
 readme = "README.md"

@@ -81,10 +81,13 @@ class ProjectManagement:
             params["per_page"] = per_page
 
     def _add_include_source_fields(
-        self, params: Dict[str, Any], include_source_fields: Optional[List[str]]
-    ):
+        self, headers: Dict[str, Any], include_source_fields: Optional[List[str]]
+    ) -> Optional[str]:
         if include_source_fields:
-            params["Include-Source-Data"] = ",".join(include_source_fields)
+            source_fields = ",".join(include_source_fields)
+            headers["Include-Source-Data"] = source_fields
+            return source_fields
+        return None
 
     def _api_call(
         self, method: str, endpoint: str, resource_id: Optional[str] = None, **kwargs
@@ -92,13 +95,14 @@ class ProjectManagement:
         url = self._build_url(endpoint, resource_id)
         params = {}
         self._add_pagination(params, kwargs.get("page"), kwargs.get("per_page"))
-        self._add_include_source_fields(params, kwargs.get("include_source_fields"))
 
         headers = self.headers.copy()
         if kwargs.get("account_token"):
             headers["Account-Token"] = kwargs["account_token"]
         if kwargs.get("project_id"):
             headers["Project-Id"] = kwargs["project_id"]
+
+        self._add_include_source_fields(headers, kwargs.get("include_source_fields"))
 
         return getattr(self.agave_client, method)(url, params=params, headers=headers)
 
