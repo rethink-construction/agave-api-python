@@ -18,10 +18,11 @@ def ensure_project_id(required: bool = True):
         @wraps(func)
         def wrapper(self, *args, project_id: Optional[str] = None, **kwargs):
             self._ensure_project_id(project_id, required)
-            return func(self, *args, project_id=project_id, **kwargs)
-
+            # Only pass project_id if it's not None
+            if project_id is not None:
+                kwargs['project_id'] = project_id
+            return func(self, *args, **kwargs)
         return wrapper
-
     return decorator
 
 
@@ -103,12 +104,9 @@ class ProjectManagement:
 
     @ensure_account_token
     @ensure_project_id(required=False)
-    def project(
-        self, project_id: Optional[str] = None, **kwargs
-    ) -> Optional[Dict[str, Any]]:
-        return self._api_call(
-            "get", "projects", project_id or self.project_id, **kwargs
-        )
+    def project(self, **kwargs) -> Optional[Dict[str, Any]]:
+        project_id = kwargs.get('project_id') or self.project_id
+        return self._api_call("get", "projects", project_id, **kwargs)
 
     @ensure_account_token
     def projects(self, **kwargs) -> Dict[str, Any]:
